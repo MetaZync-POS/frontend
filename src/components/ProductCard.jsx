@@ -12,8 +12,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const fallbackImage =
-  'https://via.placeholder.com/240x160.png?text=No+Image';
+const fallbackImage = 'https://via.placeholder.com/240x160.png?text=No+Image';
 
 const ProductCard = ({ product, onEdit, onDelete, userRole }) => {
   const imageUrl = product.imageUrl || fallbackImage;
@@ -23,7 +22,8 @@ const ProductCard = ({ product, onEdit, onDelete, userRole }) => {
       sx={{
         width: 240,
         m: 2,
-        marginInline:'auto',        borderRadius: 4,
+        mx: 'auto',
+        borderRadius: 4,
         boxShadow: 6,
         transition: 'transform 0.3s, box-shadow 0.3s',
         '&:hover': {
@@ -33,10 +33,10 @@ const ProductCard = ({ product, onEdit, onDelete, userRole }) => {
         bgcolor: '#ffffff',
       }}
     >
-      {/* Product Image */}
+      {/* Image */}
       <CardMedia
         component="img"
-        height="240"
+        height="260"
         image={imageUrl}
         alt={product.name}
         sx={{
@@ -46,7 +46,7 @@ const ProductCard = ({ product, onEdit, onDelete, userRole }) => {
         }}
       />
 
-      {/* Product Info */}
+      {/* Product Details */}
       <CardContent>
         <Stack spacing={0.5}>
           <Typography variant="h6" fontWeight={600} noWrap>
@@ -67,17 +67,32 @@ const ProductCard = ({ product, onEdit, onDelete, userRole }) => {
         </Stack>
 
         {/* Action Buttons */}
-        {(userRole === 'superadmin' || userRole === 'admin') && (
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Tooltip title="Edit">
-              <IconButton size="small" onClick={() => onEdit(product)}>
-                <EditIcon color="primary" />
+        {(userRole === 'SuperAdmin' || userRole === 'Admin') && (
+          <Box mt={2} display="flex" justifyContent="flex-end" gap={1}>
+            <Tooltip title="Edit Product">
+              <IconButton
+                size="small"
+                onClick={() => onEdit(product)}
+                sx={{
+                  bgcolor: 'primary.light',
+                  '&:hover': { bgcolor: 'primary.main', color: 'white' },
+                }}
+              >
+                <EditIcon />
               </IconButton>
             </Tooltip>
-            {userRole === 'superadmin' && (
-              <Tooltip title="Delete">
-                <IconButton size="small" onClick={() => onDelete(product)}>
-                  <DeleteIcon color="error" />
+
+            {userRole === 'SuperAdmin' && (
+              <Tooltip title="Delete Product">
+                <IconButton
+                  size="small"
+                  onClick={() => onDelete(product)}
+                  sx={{
+                    bgcolor: 'error.light',
+                    '&:hover': { bgcolor: 'error.main', color: 'white' },
+                  }}
+                >
+                  <DeleteIcon />
                 </IconButton>
               </Tooltip>
             )}

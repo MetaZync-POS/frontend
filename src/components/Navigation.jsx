@@ -12,9 +12,6 @@ import {
   useMediaQuery,
   Box,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogActions,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -22,12 +19,12 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
+import ConfirmDialog from "./ConfirmDialog"; // ✅ Import reusable dialog
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard" },
   { label: "Store", path: "/store" },
   { label: "Profile", path: "/profile" },
-  { label: "Settings", path: "/settings" }
 ];
 
 const Navigation = () => {
@@ -68,7 +65,6 @@ const Navigation = () => {
           backgroundColor: "#0cb085",
           height: '100px',
           justifyContent: "center",
-          margin: "auto",
         }}
       >
         <Toolbar
@@ -101,12 +97,7 @@ const Navigation = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {isMobile ? (
               <>
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={toggleDrawer}
-                >
+                <IconButton edge="end" color="inherit" onClick={toggleDrawer}>
                   <MenuIcon />
                 </IconButton>
                 <Drawer
@@ -210,21 +201,13 @@ const Navigation = () => {
           </Box>
         </Toolbar>
       </AppBar>
-
-      {/* Logout Confirmation Dialog */}
-      <Dialog sx={{ backdropFilter: "blur(3px)" }} open={logoutDialogOpen} onClose={() => setLogoutDialogOpen(false)}>
-        <DialogTitle>Are you sure you want to logout?</DialogTitle>
-        <DialogActions>
-          <Button onClick={() => setLogoutDialogOpen(false)} sx={{border:'1px solid #0cb085ff', color: '#0cb085ff'}}>
-            Cancel
-          </Button>
-          <Button onClick={confirmLogout} sx={{border:'1px solid #e20913ff', color: '#e20913ff'}}>
-            Logout
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-
+      
+      <ConfirmDialog
+        open={logoutDialogOpen}
+        onClose={() => setLogoutDialogOpen(false)}
+        onConfirm={confirmLogout}
+        message="Are you sure you want to logout?"
+      />
     </>
   );
 };

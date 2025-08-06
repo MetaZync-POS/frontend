@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, minWidth: 70 },
@@ -9,17 +12,43 @@ const columns = [
   { field: 'date', headerName: 'Date', flex: 2, minWidth: 140 },
 ];
 
-const rows = [
-  { id: 1, product: 'Phone Case', quantity: 2, total: 20, date: '2025-08-05' },
-  { id: 2, product: 'iPhone 14', quantity: 1, total: 999, date: '2025-08-04' },
-  { id: 3, product: 'Charger', quantity: 3, total: 45, date: '2025-08-04' },
-  { id: 4, product: 'Samsung S22', quantity: 1, total: 850, date: '2025-08-03' },
-  { id: 5, product: 'AirPods', quantity: 2, total: 300, date: '2025-08-02' },
-  { id: 6, product: 'Screen Protector', quantity: 5, total: 50, date: '2025-08-01' },
-];
-
 const RecentSalesTable = () => {
-  const sortedRows = [...rows].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const [sales, setSales] = useState([]);
+
+  useEffect(() => {
+    const fetchCompletedOrders = async () => {
+      try {
+        const res = await axios.get('/orders', { withCredentials: true });
+        const completedOrders = res.data.orders.filter(order => order.status === 'Completed');
+
+        const formattedRows = [];
+
+        completedOrders.forEach(order => {
+          const orderDate = new Date(order.createdAt).toISOString().split('T')[0];
+
+          order.products.forEach(item => {
+            formattedRows.push({
+              id: item._id,
+              product: item.product?.name || 'N/A',
+              quantity: item.quantity,
+              total: (item.product?.price || 0) * item.quantity,
+              date: orderDate
+            });
+          });
+        });
+
+        // Sort by date descending (latest first)
+        formattedRows.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        setSales(formattedRows);
+      } catch (err) {
+        console.error('Fetch error:', err);
+        toast.error('Failed to load sales');
+      }
+    };
+
+    fetchCompletedOrders();
+  }, []);
 
   return (
     <Box mt={4}>
@@ -27,7 +56,7 @@ const RecentSalesTable = () => {
         Recent Sales
       </Typography>
       <DataGrid
-        rows={sortedRows}
+        rows={sales}
         columns={columns}
         autoHeight
         pagination
