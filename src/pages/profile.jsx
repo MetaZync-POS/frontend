@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Divider } from '@mui/material';
+import { Container } from '@mui/material';
 import UserDetails from '../components/UserDetails';
 import ChangePassword from '../components/ChangePassword';
 import axios from 'axios';
@@ -25,8 +25,6 @@ const Profile = () => {
     <>
     <Navigation />
     <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>User Profile</Typography>
-      <Divider sx={{ mb: 3 }} />
       {user && (
         <>
           <UserDetails user={user} onUpdate={setUser} />

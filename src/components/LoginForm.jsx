@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { TextField, Button, Stack } from "@mui/material";
+import { TextField, Button, Stack, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import Link from "@mui/material/Link";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email required"),
@@ -127,6 +128,9 @@ const LoginForm = () => {
             "Login"
           )}
         </Button>
+        <Typography variant="body2" sx={{ mt: 2, textAlign: "center", color: "#ffffff" }}>
+          Forgot your password? <Link href="/forgot-password" sx={{ color: "#0cb085ff", textDecoration: "none" }}>Reset it</Link>
+        </Typography>
       </Stack>
     </form>
   );
