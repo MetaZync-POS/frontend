@@ -1,75 +1,113 @@
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import {
-  Box,
-  Typography,
-  Grid,
-  Paper,
-  Avatar,
-  useTheme,
-} from '@mui/material';
-import Navigation from '../components/Navigation';
-import { motion } from 'framer-motion';
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Box, Typography, Grid, Paper, Avatar, useTheme } from "@mui/material";
+import Navigation from "../components/Navigation";
+import { motion } from "framer-motion";
+import axios from "axios";
 
-import InventoryIcon from '@mui/icons-material/Inventory';
-import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import PeopleIcon from '@mui/icons-material/People';
-import StoreIcon from '@mui/icons-material/Store';
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import InventoryIcon from "@mui/icons-material/Inventory";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
+import PeopleIcon from "@mui/icons-material/People";
+import StoreIcon from "@mui/icons-material/Store";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 
-import StockAvailabilityTable from '../components/StockAvailabilityTable';
-import RecentSalesTable from '../components/RecentSalesTable';
+import StockAvailabilityTable from "../components/StockAvailabilityTable";
+import RecentSalesTable from "../components/RecentSalesTable";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
-  const isSuperAdmin = user?.role === 'SuperAdmin';
+  const isSuperAdmin = user?.role === "SuperAdmin";
   const theme = useTheme();
 
-  const outOfStockCount = 2;
+  const [dashboardData, setDashboardData] = useState({
+    totalProducts: 0,
+    outOfStock: 0,
+    todaysSales: 0,
+    totalInventoryValue: 0,
+    adminCount: 0,
+  });
+  const [exchangeRate, setExchangeRate] = useState(200); // Default exchange rate
 
-  // Common Cards (Admin + Super Admin)
+useEffect(() => {
+  const fetchDashboardData = async () => {
+    try {
+      const res = await axios.get("/summary", { withCredentials: true });
+      setDashboardData(res.data);
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+    }
+  };
+
+  const fetchExchangeRate = async () => {
+    try {
+      const res = await axios.get(
+        "https://v6.exchangerate-api.com/v6/bcb49a967036f7354c1ec05e/latest/USD"
+      );
+      const rate = res.data.conversion_rates.LKR;
+      setExchangeRate(rate);
+    } catch (err) {
+      console.error("Error fetching exchange rate:", err);
+      setExchangeRate(300);
+    }
+  };
+
+  fetchDashboardData();
+  fetchExchangeRate();
+}, []);
+
+
+  
+
   const commonCards = [
+    {
+      icon: <StoreIcon />,
+      label: "Out of Stock",
+      value: dashboardData.outOfStock,
+    },
     {
       icon: <PointOfSaleIcon />,
       label: "Today's Sales",
-      value: 'LKR 23,500',
+      value: `${new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(exchangeRate * dashboardData.todaysSales)}`
+
     },
     {
       icon: <InventoryIcon />,
-      label: 'Total Products',
-      value: 124,
+      label: "Total Products",
+      value: dashboardData.totalProducts,
+    },
+    
+  ];
+
+  const superAdminCards = [
+    {
+      icon: <PointOfSaleIcon />,
+      label: "Total Inventory Value",
+      value: `${new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(exchangeRate * dashboardData.totalInventoryValue)}`
+
+    },
+    {
+      icon: <SupervisorAccountIcon />,
+      label: "Admins",
+      value: dashboardData.adminCount,
     },
     {
       icon: <PeopleIcon />,
-      label: 'Customers',
-      value: 87,
-    },
-    {
-      icon: <StoreIcon />,
-      label: 'Out of Stock',
-      value: outOfStockCount,
+      label: "Customers",
+      value: "Coming Soon",
     },
   ];
 
-  // Super Admin Only Cards
-  const superAdminCards = [
-    {
-      icon: <SupervisorAccountIcon />,
-      label: 'Admins',
-      value: 5,
-    },
-  ];
+
 
   return (
     <>
       <Navigation />
       <Box p={4}>
-        <Typography variant="h4" color={theme.palette.primary.main} mb={4}>
-          Welcome, {user?.name || 'Admin'}
+        <Typography variant="h4" color={theme.palette.success.dark} mb={4}>
+          Welcome, {user?.name || "Admin"}
         </Typography>
 
         <Grid container spacing={3}>
-          {/* Common Cards */}
           {commonCards.map((item, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
               <motion.div
@@ -82,14 +120,17 @@ const Dashboard = () => {
                   sx={{
                     p: 3,
                     borderRadius: 4,
-                    display: 'flex',
-                    alignItems: 'center',
-                    background: '#e1f5fe',
+                    display: "flex",
+                    alignItems: "center",
+                    background: item.label === "Out of Stock" ? "#ffebee" : "#def3d5ff",
                   }}
                 >
                   <Avatar
                     sx={{
-                      bgcolor: theme.palette.primary.main,
+                      bgcolor:
+                        item.label === "Out of Stock"
+                          ? "error.main"
+                          : theme.palette.success.light,
                       mr: 2,
                       width: 56,
                       height: 56,
@@ -108,7 +149,6 @@ const Dashboard = () => {
             </Grid>
           ))}
 
-          {/* Super Admin Only Cards */}
           {isSuperAdmin &&
             superAdminCards.map((item, index) => (
               <Grid item xs={12} sm={6} md={3} key={`super-${index}`}>
@@ -122,14 +162,14 @@ const Dashboard = () => {
                     sx={{
                       p: 3,
                       borderRadius: 4,
-                      display: 'flex',
-                      alignItems: 'center',
-                      background: '#d0f0c0',
+                      display: "flex",
+                      alignItems: "center",
+                      background: "#d0f0c0",
                     }}
                   >
                     <Avatar
                       sx={{
-                        bgcolor: theme.palette.secondary.main,
+                        bgcolor: theme.palette.success.dark,
                         mr: 2,
                         width: 56,
                         height: 56,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Tabs, Tab, Typography, useMediaQuery } from "@mui/material";
+import { Box, Tabs, Tab, useMediaQuery } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductTab from "./ProductTab";
 import OrderTab from "./OrderTab";
