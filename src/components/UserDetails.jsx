@@ -13,28 +13,29 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 const UserDetails = ({ onUpdate }) => {
   const [formData, setFormData] = useState({});
   const [profileImageFile, setProfileImageFile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async () => {
-    try {
-      const res = await axios.get("/auth/profile", { withCredentials: true });
-      setFormData(res.data.admin);
-      if (onUpdate) onUpdate(res.data.admin);
-    } catch (err) {
-      console.error("Failed to fetch profile", err);
-      toast.error("Failed to fetch profile data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get("/auth/profile", { withCredentials: true });
+        setFormData(res.data.admin);
+        if (onUpdate) onUpdate(res.data.admin);
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
+        toast.error("Failed to fetch profile data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProfile();
-  }, []);
+  }, [onUpdate]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -186,7 +187,11 @@ const UserDetails = ({ onUpdate }) => {
           }}
           onClick={handleSave}
         >
-          Save Changes
+          {loading ? (
+            <CircularProgress size={24} sx={{ color: "#ffffff" }} />
+          ) : (
+            "Save Changes"
+          )}
         </Button>
       </Box>
     </Paper>

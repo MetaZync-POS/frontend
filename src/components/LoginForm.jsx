@@ -42,14 +42,8 @@ const LoginForm = () => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.admin });
 
       toast.success("Login successful");
+      navigate("/dashboard");
 
-      const role = res.data?.admin?.role;
-
-      if (role === "super-admin") {
-        navigate("/dashboard/super");
-      } else {
-        navigate("/dashboard");
-      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed");
       setLoading(false);
@@ -129,7 +123,7 @@ const LoginForm = () => {
           )}
         </Button>
         <Typography variant="body2" sx={{ mt: 2, textAlign: "center", color: "#ffffff" }}>
-          Forgot your password? <Link href="/forgot-password" sx={{ color: "#0cb085ff", textDecoration: "none" }}>Reset it</Link>
+          Forgot your password? <Link href="/forgot-password" sx={{ color: "#0cb085ff", textDecoration: "none" }}>Reset Password!</Link>
         </Typography>
       </Stack>
     </form>

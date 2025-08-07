@@ -19,7 +19,7 @@ import { useTheme } from "@mui/material/styles";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
-import ConfirmDialog from "./ConfirmDialog"; // ✅ Import reusable dialog
+import ConfirmDialog from "./ConfirmDialog";
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard" },

@@ -50,7 +50,6 @@ const StockAvailabilityTable = () => {
         columns={columns}
         getRowId={(row) => row._id}
         loading={loading}
-        autoHeight
         pagination
         pageSizeOptions={[]}
         initialState={{
