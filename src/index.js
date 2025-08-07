@@ -6,7 +6,7 @@ import axios from 'axios';
 import App from './App';
 import './index.css';
 
-axios.defaults.baseURL = 'http://localhost:5000/api'
+axios.defaults.baseURL = 'https://backend-olive-five-37.vercel.app'
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
