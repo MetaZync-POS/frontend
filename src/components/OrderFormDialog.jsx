@@ -106,7 +106,7 @@ const OrderFormDialog = ({ open, onClose, onSave, initialOrder }) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose} color="error">Cancel</Button>
         <Button variant="contained" onClick={handleSave}>
           {initialOrder ? "Update" : "Create"}
         </Button>

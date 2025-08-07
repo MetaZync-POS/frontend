@@ -10,7 +10,6 @@ import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PeopleIcon from "@mui/icons-material/People";
 import StoreIcon from "@mui/icons-material/Store";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-
 import StockAvailabilityTable from "../components/StockAvailabilityTable";
 import RecentSalesTable from "../components/RecentSalesTable";
 

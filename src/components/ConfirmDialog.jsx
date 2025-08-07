@@ -6,7 +6,7 @@ const ConfirmDialog = ({ open, onClose, onConfirm, message }) => (
     <DialogTitle>{message}</DialogTitle>
     <DialogActions>
       <Button onClick={onClose}>Cancel</Button>
-      <Button variant="contained" color="error" onClick={onConfirm}>Delete</Button>
+      <Button variant="contained" color="error" onClick={onConfirm}>Yes</Button>
     </DialogActions>
   </Dialog>
 );

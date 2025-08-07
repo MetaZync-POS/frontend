@@ -6,7 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Store from "./pages/store";
 import Profile from "./pages/profile";
-
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-      <Route
+        <Route
           path="/profile"
           element={
             <ProtectedRoute>
@@ -38,6 +39,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        
       </Routes>
       <ToastContainer position="top-center" autoClose={3000} />
     </>
